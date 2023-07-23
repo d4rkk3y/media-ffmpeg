@@ -2,10 +2,6 @@ name: Build media ffmpeg extension
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ master, main ]
-    paths-ignore:
-      - '*.md'
 env:
   NDK_VER: 21.4.7075529
 
