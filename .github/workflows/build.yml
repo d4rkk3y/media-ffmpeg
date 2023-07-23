@@ -1,4 +1,4 @@
-name: Build media ffmpeg extension 
+name: Build media extension 
 
 on:
   workflow_dispatch:
@@ -53,11 +53,25 @@ jobs:
           cd ${FFMPEG_EXT_PATH}/jni
           ./build_ffmpeg.sh "${FFMPEG_EXT_PATH}" "${ANDROID_NDK_HOME}" "linux-x86_64" "${ENABLED_DECODERS[@]}"
 
-      - name: Build media extension
+      - name: Build lib-decoder-ffmpeg
         run: |
           cd media
           ./gradlew lib-decoder-ffmpeg:build
           mv libraries/decoder_ffmpeg/buildout/outputs/aar/*release.aar $GITHUB_WORKSPACE/builds
+      
+      - name: Build lib-decoder-av1
+        run: |
+          cd media
+          AV1_MODULE_PATH="$(pwd)/libraries/decoder_av1/src/main"
+          cd "${AV1_MODULE_PATH}/jni" && \
+          git clone https://github.com/google/cpu_features
+          cd "${AV1_MODULE_PATH}/jni" && \
+          git clone https://chromium.googlesource.com/codecs/libgav1
+          cd "${AV1_MODULE_PATH}/jni/libgav1" && \
+          git clone https://github.com/abseil/abseil-cpp.git third_party/abseil-cpp
+          cd $GITHUB_WORKSPACE/media
+          ./gradlew lib-decoder-av1:build
+          mv libraries/decoder_av1/buildout/outputs/aar/*release.aar $GITHUB_WORKSPACE/builds
 
       - name: Push builds
         run: |
