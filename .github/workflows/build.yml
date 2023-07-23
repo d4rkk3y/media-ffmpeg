@@ -61,7 +61,7 @@ jobs:
         run: |
           cd media
           ./gradlew lib-decoder-ffmpeg:build
-          mv libraries/decoder_ffmpeg/buildout/outputs/aar/*.aar $GITHUB_WORKSPACE/builds
+          mv libraries/decoder_ffmpeg/buildout/outputs/aar/*release.aar $GITHUB_WORKSPACE/builds
 
       - name: Push builds
         run: |
